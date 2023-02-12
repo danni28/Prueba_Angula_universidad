@@ -1,0 +1,10 @@
+<div class="container-fluid  m-2">
+    <!-- DEPENDENDIENDO DEL VALOR DE TIPOPERSONA MOSTRAMOS LOS COMPONENTES DE LISTA  DE ALUMNOS O PROFESORES -->
+    <ng-container *ngIf="tipopersona=='1'">
+        <app-listaAlumnos></app-listaAlumnos>
+    </ng-container>
+    <ng-container *ngIf="tipopersona=='2'">
+        <app-listaProfesores></app-listaProfesores>
+    </ng-container>
+
+</div>

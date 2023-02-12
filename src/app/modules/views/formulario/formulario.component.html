@@ -1,0 +1,195 @@
+<div class="container-fluid  m-2">
+    <div class="row justify-content-center mb-2">
+        <div class="col-12">
+            <div class="card">
+                <h5 class="card-header font-weight-bold py-1">Registro de personas</h5>
+                <div class="card-body">
+                    <form [formGroup]="form">
+                        <div class="form-row">
+                            <div class="form-group col-md-2">
+                                <label class="font-weight-normal">Tipo persona</label> <br>
+                                <div class="form-controlform-check form-check-inline" *ngFor="let item of tipospersona">
+                                    <input class="form-check-input" type="radio" formControlName="tipopersona"
+                                        [value]="item.id" (ngModelChange)="capturaTipoPersona($event)">
+                                    <label class="form-check-label">{{item.tipo}}</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            
+                            <div class="form-group col-md-3">
+                                <label class="font-weight-normal">Nombre completo</label>
+                                <input type="email" class="form-control" formControlName="nombreCompleto"
+                                    placeholder="Nombre completo">
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label class="font-weight-normal">Identificación</label>
+                                <input type="text" class="form-control" formControlName="identificacion"
+                                    placeholder="Identificación">
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label class="font-weight-normal">Telefono</label>
+                                <input type="number" class="form-control" formControlName="numeroTelefono"
+                                    placeholder="Telefono">
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label class="font-weight-normal">Email</label>
+                                <input type="email" class="form-control" formControlName="email" placeholder="Email">
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label class="font-weight-normal">Direccion</label>
+                                <input type="text" class="form-control" formControlName="direccionResidencia"
+                                    placeholder="Direccion">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-1">
+                                <label class="font-weight-normal">Genero</label> <br>
+                                <div class="form-controlform-check form-check-inline" *ngFor="let item of generos">
+                                    <input class="form-check-input" type="radio" formControlName="genero"
+                                        [value]="item.abr">
+                                    <label class="form-check-label">{{item.abr}}</label>
+                                </div>
+                            </div>
+                            <ng-container *ngIf="form.value.tipopersona==1">
+                                <div class="form-group col-md-3">
+                                    <label class="font-weight-normal">Nro Matricula</label>
+                                    <input type="text" class="form-control" formControlName="numeroMatricula"
+                                        placeholder="Nro matricula">
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label class="font-weight-normal">Programa</label>
+                                    <select class="custom-select" formControlName="programa">
+                                        <option *ngFor="let item of programas" [value]="item.programa">{{item.programa}}
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label class="font-weight-normal">Nota promedio</label>
+                                    <input type="number" class="form-control" placeholder="nota"
+                                        formControlName="notaPromedio">
+                                </div>
+                            </ng-container>
+                            <ng-container *ngIf="form.value.tipopersona==2">
+                                <div class="form-group col-md-2">
+                                    <label class="font-weight-normal">Salario</label>
+                                    <input type="number" class="form-control" placeholder="Salario"
+                                        formControlName="salario">
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label class="font-weight-normal">Dependencia</label>
+                                    <select class="custom-select" formControlName="dependencia">
+                                        <option *ngFor="let item of dependencias" [value]="item.dependencia">
+                                            {{item.dependencia}}</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label class="font-weight-normal">Materia</label>
+                                    <select class="custom-select" formControlName="materia">
+                                        <option *ngFor="let item of materias" [value]="item.materia">{{item.materia}}
+                                        </option>
+                                    </select>
+                                </div>
+                            </ng-container>
+                        </div>
+                        <button type="submit" class="btn btn-primary py-0" (click)="agregarPersona()"
+                            [disabled]="form.invalid">Agregar</button>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <h5 class="card-header font-weight-bold py-1">
+                    <div class="float-left">Personas</div>
+                    <div class="float-right">
+                        <button type="button" class="btn btn-success mr-2 py-0" [routerLink]="['/detallepersona']"
+                            [queryParams]="{'set': 1}">Alumnos</button>
+                        <button type="button" class="btn btn-info py-0" [routerLink]="['/detallepersona']"
+                            [queryParams]="{'set': 2}">Profesores</button>
+                    </div>
+                </h5>
+                <div class="card-body">
+                    <!--  -->
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1">
+                                Buscar
+                            </span>
+                        </div>
+                        <input type="text" class="form-control" [(ngModel)]="searchPersona"
+                            (ngModelChange)="buscarPersona()" placeholder="Digite valor de busqueda"
+                            aria-describedby="basic-addon1">
+                    </div>
+                    <ng-container *ngIf="personas.length>0 && !cargando">
+                        <table class="table table-sm table-hover">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Nombre </th>
+                                    <th scope="col">Id</th>
+                                    <th scope="col">Email</th>
+                                    <th scope="col">Genero</th>
+                                    <th scope="col">Direccion</th>
+                                    <th scope="col">Telefono</th>
+                                    <th scope="col">Tipo </th>
+                                    <th scope="col"> </th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <ng-container *ngIf="personas.length>0">
+                                    <tr *ngFor="let item of personas; let i=index">
+                                        <th scope="row">{{i+1}}</th>
+                                        <td>{{item.nombreCompleto}}</td>
+                                        <td>{{item.identificacion}}</td>
+                                        <td>{{item.email}}</td>
+                                        <td>{{item.genero}}</td>
+                                        <td>{{item.direccionResidencia}}</td>
+                                        <td>{{item.numeroTelefono}}</td>
+                                        <td>{{item.tipopersona==1?"Alumno":"Profesor"}}</td>
+                                        <td>
+                                            <button type="button" class="btn btn-danger py-0"
+                                                (click)="eliminarPersona(item.id!,item.tipopersona!)">Eliminar</button>
+
+                                        </td>
+                                    </tr>
+                                </ng-container>
+                                <ng-container *ngIf="personas.length==0">
+                                    <tr>
+                                        <td colspan="12" class="text-center">No hay personas registradas</td>
+                                    </tr>
+                                </ng-container>
+
+
+                            </tbody>
+                        </table>
+                    </ng-container>
+                    <ng-container *ngIf="personas.length==0 && cargando">
+                        <div class="row justify-content-center">
+                            <div class="col-3 text-center">
+
+                                <i class="fa fa-spinner" aria-hidden="true" style="font-size: 30px;"></i><br>
+                                <span>Cargando...</span>
+
+                            </div>
+                        </div>
+                    </ng-container>
+                    <ng-container *ngIf="personas.length==0 && !cargando">
+                        <div class="row justify-content-center">
+                            <div class="col-3 text-center">
+                                <i class="fa fa-exclamation-triangle" aria-hidden="true"
+                                    style="font-size: 30px;"></i><br>
+                                <span>No se encontraron personas</span>
+                            </div>
+                        </div>
+                    </ng-container>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
